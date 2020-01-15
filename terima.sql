@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2020 at 08:24 AM
--- Server version: 10.4.8-MariaDB
--- PHP Version: 7.3.10
+-- Waktu pembuatan: 15 Jan 2020 pada 15.17
+-- Versi server: 10.4.8-MariaDB
+-- Versi PHP: 7.3.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,31 +25,37 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `account`
+-- Struktur dari tabel `account`
 --
 
 CREATE TABLE `account` (
-  `id` int(11) NOT NULL,
-  `jam` datetime DEFAULT NULL,
+  `id_sensor` int(11) NOT NULL,
+  `id_data` int(11) NOT NULL,
+  `jam` timestamp NULL DEFAULT current_timestamp(),
   `value_1` int(11) DEFAULT NULL,
   `value_2` int(11) DEFAULT NULL,
   `value_3` int(11) DEFAULT NULL,
-  `value_4` int(11) DEFAULT NULL,
-  `id_sensor` int(12) NOT NULL
+  `value_4` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `account`
+-- Dumping data untuk tabel `account`
 --
 
-INSERT INTO `account` (`id`, `jam`, `value_1`, `value_2`, `value_3`, `value_4`, `id_sensor`) VALUES
-(12, '2020-01-10 14:21:00', 1000, 12000, 2000, 1000, 12345),
-(13, '2020-01-10 14:21:00', 1200, 13000, 2200, 1100, 123456);
+INSERT INTO `account` (`id_sensor`, `id_data`, `jam`, `value_1`, `value_2`, `value_3`, `value_4`) VALUES
+(2001, 1, '2020-01-09 17:00:00', 1000, 500, 700, 900),
+(2002, 2, '2020-01-09 17:00:05', 800, 700, 500, 1000),
+(2001, 3, '2020-01-10 17:00:05', 600, 800, 500, 1000),
+(2002, 4, '2020-01-10 07:51:59', 1000, 1700, 2300, 2800),
+(2002, 5, '2020-01-10 08:05:58', 200, 800, 700, 1000),
+(2001, 22, '2020-01-11 17:00:10', 600, 300, 100, 700),
+(2003, 23, '2020-01-14 16:04:29', 100, 300, 500, 1000),
+(2003, 24, '2020-01-15 14:15:42', 500, 600, 900, 2500);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `keys`
+-- Struktur dari tabel `keys`
 --
 
 CREATE TABLE `keys` (
@@ -64,7 +70,7 @@ CREATE TABLE `keys` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `keys`
+-- Dumping data untuk tabel `keys`
 --
 
 INSERT INTO `keys` (`id`, `user_id`, `key`, `level`, `ignore_limits`, `is_private_key`, `ip_addresses`, `date_created`) VALUES
@@ -73,7 +79,7 @@ INSERT INTO `keys` (`id`, `user_id`, `key`, `level`, `ignore_limits`, `is_privat
 -- --------------------------------------------------------
 
 --
--- Table structure for table `limits`
+-- Struktur dari tabel `limits`
 --
 
 CREATE TABLE `limits` (
@@ -85,56 +91,94 @@ CREATE TABLE `limits` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `limits`
+-- Dumping data untuk tabel `limits`
 --
 
 INSERT INTO `limits` (`id`, `uri`, `count`, `hour_started`, `api_key`) VALUES
 (1, 'uri:api/account/index:get', 1, 1578567063, 'wismo'),
 (2, 'uri:api/account/index:get', 1, 1578567581, 'wpu123');
 
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `sensor`
+--
+
+CREATE TABLE `sensor` (
+  `id_sensor` int(11) NOT NULL,
+  `nama_sensor` varchar(40) NOT NULL,
+  `lokasi` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `sensor`
+--
+
+INSERT INTO `sensor` (`id_sensor`, `nama_sensor`, `lokasi`) VALUES
+(2001, 'semester 1', 'janti'),
+(2002, 'semester 2', 'gadang'),
+(2003, 'asd', 'asd');
+
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `account`
+-- Indeks untuk tabel `account`
 --
 ALTER TABLE `account`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_data`),
+  ADD KEY `id_sensor` (`id_sensor`);
 
 --
--- Indexes for table `keys`
+-- Indeks untuk tabel `keys`
 --
 ALTER TABLE `keys`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `limits`
+-- Indeks untuk tabel `limits`
 --
 ALTER TABLE `limits`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- Indeks untuk tabel `sensor`
+--
+ALTER TABLE `sensor`
+  ADD PRIMARY KEY (`id_sensor`);
+
+--
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `account`
+-- AUTO_INCREMENT untuk tabel `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_data` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT for table `keys`
+-- AUTO_INCREMENT untuk tabel `keys`
 --
 ALTER TABLE `keys`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `limits`
+-- AUTO_INCREMENT untuk tabel `limits`
 --
 ALTER TABLE `limits`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `account`
+--
+ALTER TABLE `account`
+  ADD CONSTRAINT `hubung id_sensor` FOREIGN KEY (`id_sensor`) REFERENCES `sensor` (`id_sensor`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
